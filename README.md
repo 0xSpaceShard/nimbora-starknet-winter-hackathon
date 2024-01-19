@@ -12,7 +12,8 @@ Nimbora Sync Yield allow users to access L1 yields from L2 without delay, additi
 
 ### Contact architecture
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/6166fa04-7686-417f-be01-cf7af137c427/c3799289-9933-4541-af42-44f8a8617c9b/Untitled.png)
+<img width="1229" alt="Untitled (3)" src="https://github.com/0xSpaceShard/nimbora-hackathon/assets/127413534/7cc26cd7-23ee-4d22-94e0-5b4eccea6413">
+
 
 ### L2 Contracts
 
