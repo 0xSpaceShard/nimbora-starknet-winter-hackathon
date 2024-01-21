@@ -63,3 +63,7 @@ Follow the `README` to develop a bew Yield strategy, compile and deploy the cont
 ## Off-chain services
 Nimbora Yield DEX off-chain services allow for the indexing and processing of L1 and L2 reports. For more details, please check this [link](https://github.com/0xSpaceShard/nimbora-relayer-public).
 or under submodules on nimbora-relayer-public
+
+## Getting started with the code
+
+We recommend you start with the setup-all.sh script and those steps so they environment can get setup.
