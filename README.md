@@ -11,7 +11,7 @@ git submodule update --recursive  --force --remote
 Before you run the command `./setup-deploy.sh` or `./start-relayer.sh` make sure to create `.env` file from `.env.example` and update the environment variables! **(Otherwise it won't work)**.
 
 First run `setup-deploy.sh`, this script will deploy the sDAI strategy on Goerli and Starknet.
-Then run `start-relayer.sh`, to start the relayer.
+Then run `start-relayer.sh`, to start the relayer. It's important to follow the README.md to connect the database with the Graphql service.
 Finally when you are done run `stop-relayer.sh`.
 
 
