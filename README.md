@@ -10,6 +10,23 @@ git submodule update --recursive  --force --remote
 **IMPORTANT**
 Before you run the command `./setup-deploy.sh` or `./start-relayer.sh` make sure to create `.env` file from `.env.example` and update the environment variables! **(Otherwise it won't work)**.
 
+```sh
+# REQUIRED Alchemy Starknet RPC url.
+export ALCHEMY_RPC_URL=https://eth-goerli.g.alchemy.com/v2/xxx
+
+# REQUIRED Alchemy Starknet RPC url.
+export L2_ALCHEMY_RPC_URL=https://starknet-goerli.g.alchemy.com/v2/XXX
+
+# REQUIRED Starknet 'Address' used on the L2 contract.
+export L2_RELAYER_ADDRESS=0xxxx
+
+# REQUIRED Starknet 'PK' used on the L2 contract.
+export L2_RELAYER_PRIVATE_KEY=0xxxx
+
+# REQUIRED Ethereum PK used to process batches.
+export PRIVATE_KEY=0xXXX
+```
+
 First run `setup-deploy.sh`, this script will deploy the sDAI strategy on Goerli and Starknet.
 Then run `start-relayer.sh`, to start the relayer. It's important to follow the README.md to connect the database with the Graphql service.
 Finally when you are done run `stop-relayer.sh`.
