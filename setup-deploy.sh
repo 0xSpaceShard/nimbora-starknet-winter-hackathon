@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source .env
+cp .env nimbora-yields-l1-public/.env
 
 cd nimbora-yields-l1-public && ./setup.sh && cd ..
 cp nimbora-yields-l1-public/configs.json ./nimbora-yields-l2-public/l1-configs.json
