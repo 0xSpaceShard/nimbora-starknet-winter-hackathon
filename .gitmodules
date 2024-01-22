@@ -1,0 +1,10 @@
+[submodule "nimbora-yields-l2-public"]
+	path = nimbora-yields-l2-public
+	url = git@github.com:0xSpaceShard/nimbora-yields-l2-public.git
+[submodule "nimbora-yields-l1-public"]
+	path = nimbora-yields-l1-public
+	url = git@github.com:0xSpaceShard/nimbora-yields-l1-public.git
+[submodule "nimbora-relayer-public"]
+	path = nimbora-relayer-public
+	url = git@github.com:0xSpaceShard/nimbora-relayer-public.git
+
