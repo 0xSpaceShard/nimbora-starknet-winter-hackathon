@@ -1,5 +1,9 @@
 # nimbora-hackathon
 
+If you want to include submodules automatically (recommended) please you command:
+
+`git clone --recurse-submodules git@github.com:0xSpaceShard/nimbora-hackathon.git`
+
 ## Yield DEX
 
 ### Problem
