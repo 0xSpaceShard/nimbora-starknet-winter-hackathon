@@ -8,7 +8,8 @@ Event data is stored in a Postgres database.
 
 The indexer is a node process that uses [Checkpoint](https://docs.checkpoint.fyi/guides/step-by-step-setup) as an indexing framework. It indexes the Starknet events when the transaction is ACCEPTED_ON_L2.
 
-![docs/architecture.png](docs/architecture.png)
+![architecture](https://github.com/0xSpaceShard/nimbora-hackathon/assets/127413534/6b1cbfde-eb25-49ec-a629-1a160a5d2280)
+
 
 ## Config
 
