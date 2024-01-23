@@ -1,0 +1,101 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  graphql:
+    image: hasura/graphql-engine:v2.30.0
+    ports:
+      - '8080:8080'
+    restart: always
+    environment:
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: ${DATABASE_URL}:${DATABASE_PORT}/${DATABASE_NAME}
+      PG_DATABASE_URL: ${DATABASE_URL}:${DATABASE_PORT}/${DATABASE_NAME}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
+    depends_on:
+      data-connector-agent:
+        condition: service_healthy
+
+  data-connector-agent:
+    image: hasura/graphql-data-connector:v2.30.0
+    restart: always
+    ports:
+      - ${DATA_CONNECTOR_AGENT_PORT}:${DATA_CONNECTOR_AGENT_PORT}
+    environment:
+      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+      ## https://quarkus.io/guides/opentelemetry#configuration-reference
+      QUARKUS_OPENTELEMETRY_ENABLED: 'false'
+      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8081/api/v1/athena/health']
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  indexer:
+    image: spaceshard/nimbora-yielddex-indexer:latest
+    container_name: multi-indexer
+    restart: always
+    environment:
+      NETWORK: ${NETWORK}
+      YIELD_DEX_L2_POOLING_MANAGER: ${YIELD_DEX_L2_POOLING_MANAGER}
+      YIELD_DEX_L2_POOLING_MANAGER_START_BLOCK: ${YIELD_DEX_L2_POOLING_MANAGER_START_BLOCK}
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_NAME: ${DATABASE_NAME}
+      ALCHEMY_RPC_URL: ${L2_ALCHEMY_RPC_URL}
+      AUTH_TOKEN: ${AUTH_TOKEN}
+    logging:
+      driver: 'json-file'
+      options:
+        tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+        max-size: '10m'
+        max-file: '3'
+    ports:
+      - '${INDEXER_METRICS_PORT}:${INDEXER_METRICS_PORT}'
+    depends_on:
+      - postgres
+      - graphql
+      - data-connector-agent
+
+  relayer:
+    image: spaceshard/nimbora-yielddex-relayer:latest
+    container_name: yielddex-relayer
+    restart: always
+    environment:
+      NETWORK: ${NETWORK}
+      YIELD_DEX_L2_POOLING_MANAGER: ${YIELD_DEX_L2_POOLING_MANAGER}
+      YIELD_DEX_L2_POOLING_MANAGER_START_BLOCK: ${YIELD_DEX_L2_POOLING_MANAGER_START_BLOCK}
+      YIELD_DEX_L1_POOLING_MANAGER: ${YIELD_DEX_L1_POOLING_MANAGER}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      ALCHEMY_RPC_URL: ${ALCHEMY_RPC_URL}
+      L2_ALCHEMY_RPC_URL: ${L2_ALCHEMY_RPC_URL}
+      GRAPHQL_ENGINE_URL: ${GRAPHQL_ENGINE_URL}
+      L2_RELAYER_ADDRESS: ${L2_RELAYER_ADDRESS}
+      L2_RELAYER_PRIVATE_KEY: ${L2_RELAYER_PRIVATE_KEY}
+      METRICS_PORT: ${RELAYER_METRICS_PORT}
+    ports:
+      - '${RELAYER_METRICS_PORT}:${RELAYER_METRICS_PORT}'
+    logging:
+      driver: 'json-file'
+      options:
+        tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+        max-size: '50m'
+        max-file: '100'
+    depends_on:
+      - indexer
+
+volumes:
+  db_data:
