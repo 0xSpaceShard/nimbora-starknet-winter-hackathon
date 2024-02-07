@@ -1,4 +1,4 @@
-# nimbora-hackathon
+# Nimbora Hackathon
 
 If you want to include submodules automatically (recommended) please you command:
 
