@@ -1,4 +1,6 @@
-# Nimbora Hackathon
+# Nimbora: Starknet Winter Hackathon
+![Nimbora](https://github.com/0xSpaceShard/nimbora-starknet-winter-hackathon/assets/159255568/5a642b5f-9af2-47a1-b9d4-2876f50fd4ae)
+
 
 If you want to include submodules automatically (recommended) please you command:
 
